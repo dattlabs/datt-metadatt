@@ -2,7 +2,7 @@
 
 set -e
 
-DOCKERINDEX=${DOCKERINDEX_LOCAL:-"datt/"}
+DOCKERINDEX=${DOCKERINDEX_LOCAL:-"METADATT_PROJNAME/"}
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CURRENT_DIR="${DIR##*/}"
