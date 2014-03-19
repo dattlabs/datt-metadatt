@@ -11,11 +11,9 @@ unset DIR CURRENT_DIR
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CURRENT_DIR="${DIR##*/}"
-echo "DIR: "$DIR
 
 get_projname () {
   PROJNAME="datt"
-    #TODO read env variable. or allow for user flag.  
     # # Get the user input.
     # printf "Enter the project name: " ; read -r title
 
