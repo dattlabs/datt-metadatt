@@ -2,6 +2,7 @@
 
 # Make the script exit on any errors returned by individual commands.
 #set -e
+#set -x
 
 # Reset the environmental vars if they're already set.
 unset DIR CURRENT_DIR
@@ -33,25 +34,48 @@ clean_old () {
 }
 
 generate_buildfile () {
-  echo "[BUILDFILE] START"
   sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/build.template" > "$DIR/../$daproject/build"
+  echo "[BUILDFILE] COMPLETE"
 }
 
 generate_makefile () {
   echo "[MAKEFILE] START"
 }
 
+generator_run () {
+  # echo "generator_run: "$1
+
 # Determine the project name. This will be the user name for the public docker index, or for a private index it will be the docker index location. For example `localhost:8888/`
-get_projname
+  get_projname
 
 # Each subproject has utility scripts that can be generated from templates stored in the templates folder in this repo. I'm expecting that all subprojects are in the same directory. Meta-bash :-)
 
-for daproject in $(ls $DIR/..); do
-  if [[ "$daproject" != $CURRENT_DIR ]]; then
-    #clean_old
-    echo "[BUILD] $daproject build script"
-    generate_buildfile
-  fi
+  for daproject in $(ls $DIR/..); do
+    if [[ "$daproject" != $CURRENT_DIR ]]; then
+      #clean_old
+      echo "[BUILD] $daproject build script"
+      $1
+    fi
+  done
+}
+
+
+while getopts ":a:b" o; do
+  case ${o} in
+    a)
+      echo "-a was triggered, Parameter: ${OPTARG}" >&2
+      ;;
+    b)
+      # echo "-b was triggered, Parameter: ${OPTARG}" >&2
+      generator_run "generate_buildfile"
+      ;;
+    \?)
+      echo "Invalid option: -${OPTARG}" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -${OPTARG} requires an argument." >&2
+      exit 1
+      ;;
+  esac
 done
-
-
