@@ -35,7 +35,7 @@ clean_old () {
 
 generate_buildfile () {
   sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/build.template" > "$DIR/../$daproject/build"
-  echo "[BUILDFILE] COMPLETE"
+  echo "[OK] $daproject/build created"
 }
 
 generate_makefile () {
@@ -53,29 +53,65 @@ generator_run () {
   for daproject in $(ls $DIR/..); do
     if [[ "$daproject" != $CURRENT_DIR ]]; then
       #clean_old
-      echo "[BUILD] $daproject build script"
-      $1
+      # echo "[BUILD] $daproject build script"
+      # $1
+      echo "passed: "$1
+      case "$1" in
+        "build.template")
+          generate_buildfile
+          ;;
+        "Makefile.template")
+          generate_makefile
+          ;;
+        *)
+          echo "err. invalid name."
+      esac
     fi
   done
 }
 
+usage() {
+  echo "Usage: $0 {-b <templatename>}"
+  echo ""
+  echo "Examples:"
+  echo "metabuild.sh -b build.template"
+  echo "metabuild.sh -b Makefile.template"
+  echo ""
 
-while getopts ":a:b" o; do
-  case ${o} in
+  exit 1
+}
+
+# if no arguments are passed, display the help
+
+if [ -z "${1}" ]; then
+  usage
+  exit 1
+fi
+
+# parse command-line options
+
+while getopts ":a:b:h" o; do
+  case "${o}" in
     a)
-      echo "-a was triggered, Parameter: ${OPTARG}" >&2
+      echo "${o} was triggered, Parameter: ${OPTARG}" >&2
       ;;
     b)
-      # echo "-b was triggered, Parameter: ${OPTARG}" >&2
-      generator_run "generate_buildfile"
+      echo "-b was triggered, Parameter: ${OPTARG}"
+      generator_run ${OPTARG}
       ;;
     \?)
-      echo "Invalid option: -${OPTARG}" >&2
+      echo "Invalid option: -${OPTARG}"
       exit 1
       ;;
     :)
-      echo "Option -${OPTARG} requires an argument." >&2
+      echo "Option -${OPTARG} requires an argument."
       exit 1
+      ;;
+    *)
+      usage
       ;;
   esac
 done
+# if [ -z "${a}" ] || [ -z "${b}" ]; then
+#     usage
+# fi
