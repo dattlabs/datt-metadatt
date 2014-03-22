@@ -37,10 +37,8 @@ def getMakefileEntry(containerPath, parentImageName):
 
 if __name__ == "__main__":
   target = None
-  if len(argv) == 2:
-    target = argv[1]
-  elif len(argv) > 2:
-    print('Usage: make.py [build_target]')
+  if len(argv) == 2: target = argv[1]
+  elif len(argv) > 2: print('Usage: make.py [build_target]'); exit(1)
 
   metaDattRoot = os.path.dirname(os.path.realpath(__file__))
   dattRoot = os.path.abspath(os.path.join(metaDattRoot, os.pardir))
