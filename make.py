@@ -17,8 +17,8 @@ trimend   = lambda s, subs: s[:-len(subs)] if s.endswith(subs) else s
 trim      = lambda s, subs: trimstart(trimend(s, subs), subs)
 
 def getParentImageName(targetPath):
+  if not isContainerPath(targetPath): return None
   try:
-    if not isContainerPath(targetPath): return None
     dockerfileName = '%s/Dockerfile' % targetPath
     with open(dockerfileName) as f:
       fromLine = single(filter(lambda s: s.startswith('FROM'), [s.strip() for s in f.readlines()]))
