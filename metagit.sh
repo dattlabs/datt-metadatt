@@ -13,7 +13,12 @@ for daproject in $(ls $DIR/..); do
     echo "[GIT] $daproject check"
     pushd $DIR/../$daproject
     if [ $(git status | grep 'build' | wc -m) -ne 0 ]; then
-      git add build; git commit -m 'meta-updated build'; git push
+      git add build; git commit -m 'meta-updated build. '; git push
+    fi
+
+# If the run.sh or run-debug.sh commands have been modified, then commit and push those changes
+    if [ $(git status | grep -E '(run.sh|run-debug.sh)' | wc -m) -ne 0 ]; then
+      git add run.sh run-debug.sh; git commit -m 'meta-updated run and run-debug commands. '; git push
     fi
     popd
   fi
