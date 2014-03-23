@@ -9,7 +9,7 @@ isContainerPath = lambda p: os.path.isfile("%s/Dockerfile" % p)
 
 def single(lst):
   if not len(lst) == 1:
-    raise RuntimeError('single expects a list containing one item: %s' % lst)
+    raise RuntimeError("'single' expects a list containing one item but got %s items" % len(lst))
   return lst[0]
 
 trimstart = lambda s, subs: s[len(subs):] if s.startswith(subs) else s
@@ -17,10 +17,14 @@ trimend   = lambda s, subs: s[:-len(subs)] if s.endswith(subs) else s
 trim      = lambda s, subs: trimstart(trimend(s, subs), subs)
 
 def getParentImageName(targetPath):
-  if not isContainerPath(targetPath): return None
-  with open('%s/Dockerfile' % targetPath) as f:
-    fromLine = single(filter(lambda s: s.startswith('FROM'), [s.strip() for s in f.readlines()]))
-    return trim(trim(fromLine, ":latest"), "FROM").strip()
+  try:
+    if not isContainerPath(targetPath): return None
+    dockerfileName = '%s/Dockerfile' % targetPath
+    with open(dockerfileName) as f:
+      fromLine = single(filter(lambda s: s.startswith('FROM'), [s.strip() for s in f.readlines()]))
+      return trim(trim(fromLine, ":latest"), "FROM").strip()
+  except Exception as e:
+    print("Malformed file: %s\n\t%s" % (dockerfileName, e.message)); exit(1)
 
 isDattImage           = lambda img: img.startswith("datt/datt-")
 containerPathToTarget = lambda cp:  trimstart(cp, "../datt-")
