@@ -27,7 +27,7 @@ def getParentImageName(targetPath):
     print("Malformed file: %s\n\t%s" % (dockerfileName, e.message)); exit(1)
 
 isDattImage           = lambda img: img.startswith("datt/datt-")
-containerPathToTarget = lambda cp:  trimstart(cp, "../datt-")
+containerPathToTarget = lambda cp:  trimstart(cp, "./containers/datt-")
 imageNameToTarget     = lambda img: trimstart(img, "datt/datt-")
 
 fst = lambda x: x[0]
@@ -45,12 +45,12 @@ if __name__ == "__main__":
   elif len(argv) > 2: print('Usage: make.py [build_target]'); exit(1)
 
   metaDattRoot = os.path.dirname(os.path.realpath(__file__))
-  dattRoot = os.path.abspath(os.path.join(metaDattRoot, os.pardir))
+  containersRoot = "%s/containers" % metaDattRoot
 
-  paths = set(glob.glob("%s/datt-*" % dattRoot)) - set(glob.glob(metaDattRoot))
+  paths = glob.glob("%s/datt-*" % containersRoot)
   containerPaths = filter(isContainerPath, paths)
 
-  dependencies = map(lambda p: ("..%s" % trimstart(p, dattRoot), getParentImageName(p)), containerPaths)
+  dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
   targets = [getMakefileEntry(fst(t), snd(t)) for t in dependencies]
 
