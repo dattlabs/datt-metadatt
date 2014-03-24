@@ -54,7 +54,7 @@ generator_run() {
         if [[ "$1" == "$datemplate" ]]; then
           # retrieve the passed name without the suffix after the `.`
           command_name=$(echo $1 | cut -d. -f 1)
-          # bash is insane. :-) run the appropriate _generator function.
+          # run the appropriate _generator function.
           echo $($command_name"_generator")
           echo "command: $command_name"
         fi
