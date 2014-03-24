@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from sys import argv, exit
-from subprocess import call
+import subprocess
 import glob
 import os
 
@@ -50,6 +50,10 @@ if __name__ == "__main__":
   paths = glob.glob("%s/datt-*" % containersRoot)
   containerPaths = filter(isContainerPath, paths)
 
+  for path in containerPaths:
+    print 'Pulling from git repository: %s' % path
+    subprocess.call(['git', 'pull'], cwd=path, stdout=open(os.devnull, 'w'))
+
   dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
   targets = [getMakefileEntry(fst(t), snd(t)) for t in dependencies]
@@ -65,4 +69,4 @@ if __name__ == "__main__":
   with open('Makefile', 'w') as f:
     f.write("%s\n" % '\n'.join(allSections))
 
-  if target: call(['make', target])
+  if target: subprocess.call(['make', target])
