@@ -49,21 +49,16 @@ generator_run() {
 # Each subproject has utility scripts that can be generated from templates stored in the templates folder in this repo. I'm expecting that all subprojects are in the same directory. Meta-bash :-)
 
   for daproject in $(ls $DIR/..); do
-    if [[ "$daproject" != $CURRENT_DIR ]]; then
-      #clean_old
-      # echo "[BUILD] $daproject build script"
-      # $1
-      # echo "passed: "$1
-      case "$1" in
-        "build.template")
-          build_generator
-          ;;
-        "Makefile.template")
-          Makefile_generator
-          ;;
-        *)
-          echo "err. invalid name."
-      esac
+    if [[ "$daproject" != "$CURRENT_DIR" ]]; then
+      for datemplate in $(ls $DIR/templates); do
+        if [[ "$1" == "$datemplate" ]]; then
+          # retrieve the passed name without the suffix after the `.`
+          command_name=$(echo $1 | cut -d. -f 1)
+          # bash is insane. :-) run the appropriate _generator function.
+          echo $($command_name"_generator")
+          echo "command: $command_name"
+        fi
+      done
     fi
   done
 }
@@ -72,8 +67,9 @@ usage() {
   echo "Usage: $0 {-b <templatename>}"
   echo ""
   echo "Examples:"
-  echo "metabuild.sh -b build.template"
-  echo "metabuild.sh -b Makefile.template"
+  for datemplate in $(ls $DIR/templates); do
+    echo "metabuild.sh -b $datemplate"
+  done
   echo ""
 
   exit 1
