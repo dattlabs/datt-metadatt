@@ -7,13 +7,19 @@ set -e
 #set -x
 
 # Reset the environmental vars if they're already set.
-unset DIR CURRENT_DIR
+unset DIR
 
 # Get the correct directory info to use in a bash script and store in variables. I'm using the most-updated way to achieve this.
 # http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CURRENT_DIR="${DIR##*/}"
+
+load_generators() {
+  for dagenerator in $(ls $DIR/generators); do
+    source $DIR/generators/$dagenerator
+    echo "[LOADED]: generators/$dagenerator";
+  done
+}
 
 load_generators() {
   for dagenerator in $(ls $DIR/generators); do
@@ -38,7 +44,7 @@ get_projname() {
 
 clean_old() {
   for files in "build_test.sh" "build.sh"; do
-    rm -v "$DIR/../$daproject/$files"
+    rm -v "$DIR/containers/$daproject/$files"
   done
 }
 
@@ -48,18 +54,16 @@ generator_run() {
 
 # Each subproject has utility scripts that can be generated from templates stored in the templates folder in this repo. I'm expecting that all subprojects are in the same directory. Meta-bash :-)
 
-  for daproject in $(ls $DIR/..); do
-    if [[ "$daproject" != "$CURRENT_DIR" ]]; then
-      for datemplate in $(ls $DIR/templates); do
-        if [[ "$1" == "$datemplate" ]]; then
-          # retrieve the passed name without the suffix after the `.`
-          command_name=$(echo $1 | cut -d. -f 1)
-          # run the appropriate _generator function.
-          echo $($command_name"_generator")
-          echo "command: $command_name"
-        fi
-      done
-    fi
+  for daproject in $(ls $DIR/containers); do
+    for datemplate in $(ls $DIR/templates); do
+      if [[ "$1" == "$datemplate" ]]; then
+        # retrieve the passed name without the suffix after the `.`
+        command_name=$(echo $1 | cut -d. -f 1)
+        # run the appropriate _generator function.
+        echo $($command_name"_generator")
+        echo "command: $command_name"
+      fi
+    done
   done
 }
 

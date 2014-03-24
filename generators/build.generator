@@ -4,8 +4,8 @@
 set -e
 
 build_generator() {
-  sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/templates/build.template" > "$DIR/../$daproject/build"
+  sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/templates/build.template" > "$DIR/containers/$daproject/build"
   # make the build script executable...
-  chmod +x "$DIR/../$daproject/build"
+  chmod +x "$DIR/containers/$daproject/build"
   echo "[OK] $daproject/build created"
 }
