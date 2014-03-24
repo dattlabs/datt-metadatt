@@ -8,7 +8,7 @@ test:
   bats ./tests/*
 
 build:
-  echo "build something!"
+  ./build
 
 setup:
   ./setup.sh
