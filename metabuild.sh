@@ -15,6 +15,13 @@ unset DIR CURRENT_DIR
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CURRENT_DIR="${DIR##*/}"
 
+load_generators() {
+  for dagenerator in $(ls $DIR/generators); do
+    source $DIR/generators/$dagenerator
+    echo "[LOADED]: generators/$dagenerator";
+  done
+}
+
 get_projname() {
   PROJNAME="datt"
     # # Get the user input.
@@ -35,20 +42,7 @@ clean_old() {
   done
 }
 
-generate_buildfile() {
-  sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/build.template" > "$DIR/../$daproject/build"
-  # make the build script executable...
-  chmod +x "$DIR/../$daproject/build"
-  echo "[OK] $daproject/build created"
-}
-
-generate_makefile() {
-  echo "[MAKEFILE] START"
-}
-
 generator_run() {
-  # echo "generator_run: "$1
-
 # Determine the project name. This will be the user name for the public docker index, or for a private index it will be the docker index location. For example `localhost:8888/`
   get_projname
 
@@ -59,7 +53,7 @@ generator_run() {
       #clean_old
       # echo "[BUILD] $daproject build script"
       # $1
-      echo "passed: "$1
+      # echo "passed: "$1
       case "$1" in
         "build.template")
           generate_buildfile
@@ -84,6 +78,11 @@ usage() {
 
   exit 1
 }
+
+# ------------ MAIN STUFF
+
+# load the generators in the `generators` sub-folder
+load_generators
 
 # if no arguments are passed, display the help
 
@@ -116,6 +115,3 @@ while getopts ":a:b:h" o; do
       ;;
   esac
 done
-# if [ -z "${a}" ] || [ -z "${b}" ]; then
-#     usage
-# fi
