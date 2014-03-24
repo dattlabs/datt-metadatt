@@ -1,4 +1,0 @@
-run_generator() {
-  cp -v "$DIR/templates/run.template" "$DIR/containers/$daproject/run.sh"
-  echo "[OK] $daproject/run.sh created"
-}

@@ -1,4 +1,0 @@
-run-debug_generator() {
-  cp -v "$DIR/templates/run-debug.template" "$DIR/containers/$daproject/run-debug.sh"
-  echo "[OK] $daproject/run-debug.sh created"
-}
