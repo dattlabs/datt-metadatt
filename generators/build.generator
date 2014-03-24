@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Make the script exit on any errors returned by individual commands.
+set -e
+
+build_generator() {
+  sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/templates/build.template" > "$DIR/../$daproject/build"
+  # make the build script executable...
+  chmod +x "$DIR/../$daproject/build"
+  echo "[OK] $daproject/build created"
+}

@@ -25,13 +25,13 @@ load_generators() {
 get_projname() {
   PROJNAME="datt"
     # # Get the user input.
-    # printf "Enter the project name: " ; read -r title
+    # printf "Enter the project name: " ; read -r PROJNAME
 
     # # Remove the spaces from the title if necessary.
-    # title=${title// /_}
+    # PROJNAME=${PROJNAME// /_}
 
     # # Convert uppercase to lowercase.
-    # title=${title,,}
+    # PROJNAME=${PROJNAME,,}
 }
 
 # For dev purposes, a nice helper function to clean out old test files.
@@ -56,10 +56,10 @@ generator_run() {
       # echo "passed: "$1
       case "$1" in
         "build.template")
-          generate_buildfile
+          build_generator
           ;;
         "Makefile.template")
-          generate_makefile
+          Makefile_generator
           ;;
         *)
           echo "err. invalid name."

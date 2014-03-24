@@ -3,6 +3,6 @@
 # Make the script exit on any errors returned by individual commands.
 set -e
 
-generate_makefile() {
+Makefile_generator() {
   echo "[MAKEFILE] START"
 }
