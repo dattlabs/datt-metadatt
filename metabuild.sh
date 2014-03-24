@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Make the script exit on any errors returned by individual commands.
-#set -e
+set -e
+
+# Show commands as they get executed
 #set -x
 
 # Reset the environmental vars if they're already set.
@@ -35,6 +37,8 @@ clean_old() {
 
 generate_buildfile() {
   sed "s/METADATT_PROJNAME/$PROJNAME/g" "$DIR/build.template" > "$DIR/../$daproject/build"
+  # make the build script executable...
+  chmod +x "$DIR/../$daproject/build"
   echo "[OK] $daproject/build created"
 }
 
