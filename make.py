@@ -2,6 +2,7 @@
 
 from sys import argv, exit
 from optparse import OptionParser
+import itertools
 import subprocess
 import glob
 import os
@@ -34,11 +35,18 @@ imageNameToTarget     = lambda img: trimstart(img, "datt/datt-")
 fst = lambda x: x[0]
 snd = lambda x: x[1]
 
-def getMakefileEntry(containerPath, parentImageName, metaDattRoot):
+def getMakefileEntry(target, labelLine, containerPath, metaDattRoot, task):
+  return (target, "%s\n\tpushd %s;%s/scripts/%s.sh;popd\n" % (labelLine, containerPath, metaDattRoot, task))
+
+def getRunMakefileEntry(containerPath, metaDattRoot):
   target = containerPathToTarget(containerPath)
+  return getMakefileEntry(target, "%s%%run: %s" % (target, target), containerPath, metaDattRoot, "run")
+
+def getDefaultMakefileEntry(containerPath, parentImageName, metaDattRoot):
   parent = imageNameToTarget(parentImageName)
+  target = containerPathToTarget(containerPath)
   labelLine = "%s:%s" % (target, " %s" % parent if isDattImage(parentImageName) else "")
-  return (target, "%s\n\tpushd %s;%s/scripts/build.sh;popd\n" % (labelLine, containerPath, metaDattRoot))
+  return getMakefileEntry(target, labelLine, containerPath, metaDattRoot, "build")
 
 if __name__ == "__main__":
   parser = OptionParser(usage="usage: %prog [options] [build_target]")
@@ -63,7 +71,8 @@ if __name__ == "__main__":
 
   dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
-  targets = [getMakefileEntry(fst(t), snd(t), metaDattRoot) for t in dependencies]
+  getTargets = lambda t: [getDefaultMakefileEntry(fst(t), snd(t), metaDattRoot), getRunMakefileEntry(fst(t), metaDattRoot)]
+  targets = list(itertools.chain(*map(getTargets, dependencies)))
 
   allTargets = ' '.join(map(fst, targets))
   phonyLine = "\n.PHONY: all test %s\n" % allTargets
@@ -77,4 +86,4 @@ if __name__ == "__main__":
   with open('Makefile', 'w') as f:
     f.write("%s\n" % '\n'.join(allSections))
 
-  if target: subprocess.call(['make', target])
+  if target: subprocess.call(['make', target.replace(':', '%')])
