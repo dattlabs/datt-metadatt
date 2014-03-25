@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from sys import argv, exit
+from optparse import OptionParser
 import subprocess
 import glob
 import os
@@ -33,16 +34,21 @@ imageNameToTarget     = lambda img: trimstart(img, "datt/datt-")
 fst = lambda x: x[0]
 snd = lambda x: x[1]
 
-def getMakefileEntry(containerPath, parentImageName):
+def getMakefileEntry(containerPath, parentImageName, metaDattRoot):
   target = containerPathToTarget(containerPath)
   parent = imageNameToTarget(parentImageName)
   labelLine = "%s:%s" % (target, " %s" % parent if isDattImage(parentImageName) else "")
-  return (target, "%s\n\t%s/build\n" % (labelLine, containerPath))
+  return (target, "%s\n\tpushd %s;%s/scripts/build.sh;popd\n" % (labelLine, containerPath, metaDattRoot))
 
 if __name__ == "__main__":
-  target = None
-  if len(argv) == 2: target = argv[1]
-  elif len(argv) > 2: print('Usage: make.py [build_target]'); exit(1)
+  parser = OptionParser(usage="usage: %prog [options] [build_target]")
+  parser.add_option("--skip-pull",
+                    action="store_true", default = False,
+                    help="skip pulling from remote git container repos")
+
+  (options, args) = parser.parse_args()
+  target = args[0] if len(args) >= 1 else None
+  if len(args) > 1: parser.print_help(); exit(1)
 
   metaDattRoot = os.path.dirname(os.path.realpath(__file__))
   containersRoot = "%s/containers" % metaDattRoot
@@ -50,13 +56,14 @@ if __name__ == "__main__":
   paths = glob.glob("%s/datt-*" % containersRoot)
   containerPaths = filter(isContainerPath, paths)
 
-  for path in containerPaths:
-    print 'Pulling from git repository: %s' % path
-    subprocess.call(['git', 'pull'], cwd=path, stdout=open(os.devnull, 'w'))
+  if not options.skip_pull:
+    for path in containerPaths:
+      print 'Pulling from git repository: %s' % path
+      subprocess.call(['git', 'pull'], cwd=path, stdout=open(os.devnull, 'w'))
 
   dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
-  targets = [getMakefileEntry(fst(t), snd(t)) for t in dependencies]
+  targets = [getMakefileEntry(fst(t), snd(t), metaDattRoot) for t in dependencies]
 
   allTargets = ' '.join(map(fst, targets))
   phonyLine = "\n.PHONY: all test %s\n" % allTargets
@@ -66,6 +73,7 @@ if __name__ == "__main__":
 
   allSections = [phonyLine, allLine, testLines] + targetEntries
 
+  print('Writing ./Makefile')
   with open('Makefile', 'w') as f:
     f.write("%s\n" % '\n'.join(allSections))
 
