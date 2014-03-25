@@ -2,7 +2,7 @@
 
 set -e
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR=`pwd`
 CURRENT_DIR="${DIR##*/}"
 
 # The docker index server can be set to a local index, or by default it will use the current directory name before the `-` separator. for example: datt-nginx will use the `datt` index account.
