@@ -61,8 +61,13 @@ if __name__ == "__main__":
   metaDattRoot = os.path.dirname(os.path.realpath(__file__))
   containersRoot = "%s/containers" % metaDattRoot
 
-  paths = glob.glob("%s/datt-*" % containersRoot)
-  containerPaths = filter(isContainerPath, paths)
+  getContainerPaths = lambda: filter(isContainerPath, glob.glob("%s/datt-*" % containersRoot))
+  containerPaths = getContainerPaths()
+
+  if len(containerPaths) == 0:
+    print('Found no containers in ./containers. Calling ./init_submodules.sh.')
+    subprocess.call(['./init_submodules.sh'], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
+    containerPaths = getContainerPaths()
 
   if not options.skip_pull:
     for path in containerPaths:
