@@ -1,0 +1,40 @@
+[submodule "containers/datt-archlinux"]
+	path = containers/datt-archlinux
+	url = git@github.com:dattlabs/datt-archlinux.git
+
+[submodule "containers/datt-base"]
+	path = containers/datt-base
+	url = git@github.com:dattlabs/datt-base.git
+
+[submodule "containers/datt-dattbench"]
+	path = containers/datt-dattbench
+	url = git@github.com:dattlabs/datt-dattbench.git
+
+[submodule "containers/datt-heka"]
+	path = containers/datt-heka
+	url = git@github.com:dattlabs/datt-heka.git
+
+[submodule "containers/datt-nginx"]
+	path = containers/datt-nginx
+	url = git@github.com:dattlabs/datt-nginx.git
+
+[submodule "containers/datt-openjdk7"]
+	path = containers/datt-openjdk7
+	url = git@github.com:dattlabs/datt-openjdk7.git
+
+[submodule "containers/datt-sampleapp"]
+	path = containers/datt-sampleapp
+	url = git@github.com:dattlabs/datt-sampleapp.git
+
+[submodule "containers/datt-scala"]
+	path = containers/datt-scala
+	url = git@github.com:dattlabs/datt-scala.git
+
+[submodule "containers/datt-smartrouter"]
+	path = containers/datt-smartrouter
+	url = git@github.com:dattlabs/datt-smartrouter.git
+
+[submodule "containers/datt-ubuntu"]
+	path = containers/datt-ubuntu
+	url = git@github.com:dattlabs/datt-ubuntu.git
+
