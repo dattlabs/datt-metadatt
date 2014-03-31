@@ -61,3 +61,7 @@
 [submodule "containers/datt-golang"]
 	path = containers/datt-golang
 	url = git@github.com:dattlabs/datt-golang.git
+
+[submodule "containers/datt-pxe"]
+	path = containers/datt-pxe
+	url = git@github.com:dattlabs/datt-pxe.git
