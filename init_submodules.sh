@@ -9,4 +9,12 @@ set_upstream() {
 }
 
 export -f set_upstream
-find ./containers/* -maxdepth 0 -type d | xargs -P 100 -n 1 bash -c 'set_upstream "$@"' _ {}
+
+if [ -z "$1" ]
+then
+  dirs=`find ./containers/* -maxdepth 0 -type d`
+else
+  dirs=$1
+fi
+
+echo "$dirs" | xargs -P 100 -n 1 bash -c 'set_upstream "$@"' _ {}
