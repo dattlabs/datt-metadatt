@@ -45,3 +45,19 @@
 [submodule "containers/datt-ambassador"]
 	path = containers/datt-ambassador
 	url = git@github.com:dattlabs/datt-ambassador.git
+
+[submodule "containers/datt-ruby"]
+	path = containers/datt-ruby
+	url = git@github.com:dattlabs/datt-ruby.git
+
+[submodule "containers/datt-octopress"]
+	path = containers/datt-octopress
+	url = git@github.com:dattlabs/datt-octopress.git
+
+[submodule "containers/datt-datt-dockerui"]
+	path = containers/datt-datt-dockerui
+	url = git@github.com:dattlabs/datt-datt-dockerui.git
+
+[submodule "containers/datt-golang"]
+	path = containers/datt-golang
+	url = git@github.com:dattlabs/datt-golang.git
