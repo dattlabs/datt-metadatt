@@ -38,3 +38,10 @@
 	path = containers/datt-ubuntu
 	url = git@github.com:dattlabs/datt-ubuntu.git
 
+[submodule "containers/datt-etcd"]
+	path = containers/datt-etcd
+	url = git@github.com:dattlabs/datt-etcd.git
+
+[submodule "containers/datt-ambassador"]
+	path = containers/datt-ambassador
+	url = git@github.com:dattlabs/datt-ambassador.git
