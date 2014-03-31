@@ -54,9 +54,9 @@
 	path = containers/datt-octopress
 	url = git@github.com:dattlabs/datt-octopress.git
 
-[submodule "containers/datt-datt-dockerui"]
-	path = containers/datt-datt-dockerui
-	url = git@github.com:dattlabs/datt-datt-dockerui.git
+[submodule "containers/datt-dockerui"]
+	path = containers/datt-dockerui
+	url = git@github.com:dattlabs/datt-dockerui.git
 
 [submodule "containers/datt-golang"]
 	path = containers/datt-golang
