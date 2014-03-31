@@ -9,4 +9,4 @@ set_upstream() {
 }
 
 export -f set_upstream
-find ./containers/* -maxdepth 0 -type d | xargs -P 0 -n 1 bash -c 'set_upstream "$@"' _ {}
+find ./containers/* -maxdepth 0 -type d | xargs -P 100 -n 1 bash -c 'set_upstream "$@"' _ {}
