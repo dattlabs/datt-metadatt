@@ -1,10 +1,12 @@
 #!/bin/bash
 git pull && git submodule init && git submodule update && git submodule status
 
-for dir in `find ./containers/* -maxdepth 1 -type d`
-do
-  pushd $dir
+set_upstream() {
+  pushd $2
   git pull origin master
   git checkout master
   popd
-done
+}
+
+export -f set_upstream
+find ./containers/* -maxdepth 0 -type d | xargs -P 0 -n 1 bash -c 'set_upstream "$@"' _ {}
