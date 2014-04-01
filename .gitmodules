@@ -65,3 +65,7 @@
 [submodule "containers/datt-pxe"]
 	path = containers/datt-pxe
 	url = git@github.com:dattlabs/datt-pxe.git
+
+[submodule "containers/datt-haskell"]
+	path = containers/datt-haskell
+	url = git@github.com:dattlabs/datt-haskell.git
