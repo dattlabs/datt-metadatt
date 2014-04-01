@@ -1,11 +1,15 @@
 #!/bin/bash
-git pull && git submodule init && git submodule update && git submodule status
+git pull > /dev/null && \
+  git submodule init > /dev/null && \
+  git submodule update > /dev/null && \
+  git submodule status > /dev/null
 
 set_upstream() {
-  pushd $2
-  git pull origin master
-  git checkout master
-  popd
+  echo Syncing and setting upstream for $2
+  pushd $2 > /dev/null
+  git pull origin master &> /dev/null
+  git checkout master &> /dev/null
+  popd > /dev/null
 }
 
 export -f set_upstream
