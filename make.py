@@ -35,18 +35,17 @@ imageNameToTarget     = lambda img: trimstart(img, "datt/datt-")
 fst = lambda x: x[0]
 snd = lambda x: x[1]
 
-def getMakefileEntry(target, labelLine, containerPath, metaDattRoot, task):
-  return (target, "%s\n\tpushd %s;%s/scripts/%s.sh;popd\n" % (labelLine, containerPath, metaDattRoot, task))
+def getMakefileEntry(target, labelLine, cmd):
+  return (target, "%s\n\t%s\n" % (labelLine, cmd))
 
-def getRunMakefileEntry(containerPath, metaDattRoot):
-  target = containerPathToTarget(containerPath)
-  return getMakefileEntry(target, "%s%%run: %s" % (target, target), containerPath, metaDattRoot, "run")
+def getDefaultMakefileEntry(target, labelLine, containerPath):
+  return getMakefileEntry(target, labelLine, "pushd %s > /dev/null;make build;popd > /dev/null" % containerPath)
 
-def getDefaultMakefileEntry(containerPath, parentImageName, metaDattRoot):
+def getContainerMakefileEntry(containerPath, parentImageName):
   parent = imageNameToTarget(parentImageName)
   target = containerPathToTarget(containerPath)
   labelLine = "%s:%s" % (target, " %s" % parent if isDattImage(parentImageName) else "")
-  return getMakefileEntry(target, labelLine, containerPath, metaDattRoot, "build")
+  return getDefaultMakefileEntry(target, labelLine, containerPath)
 
 if __name__ == "__main__":
   parser = OptionParser(usage="usage: %prog [options] [build_target]")
@@ -61,7 +60,8 @@ if __name__ == "__main__":
   metaDattRoot = os.path.dirname(os.path.realpath(__file__))
   containersRoot = "%s/containers" % metaDattRoot
 
-  containerPaths = glob.glob("%s/datt-*" % containersRoot)
+  getContainerPaths = lambda: glob.glob("%s/datt-*" % containersRoot)
+  containerPaths = getContainerPaths()
 
   if len(containerPaths) == 0:
     print('Found no containers in ./containers. Calling ./init_submodules.sh.')
@@ -78,7 +78,7 @@ if __name__ == "__main__":
 
   dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
-  getTargets = lambda t: [getDefaultMakefileEntry(fst(t), snd(t), metaDattRoot), getRunMakefileEntry(fst(t), metaDattRoot)]
+  getTargets = lambda t: [getContainerMakefileEntry(fst(t), snd(t))]
   targets = list(itertools.chain(*map(getTargets, dependencies)))
 
   allTargets = ' '.join(map(fst, targets))
@@ -95,4 +95,15 @@ if __name__ == "__main__":
   with open('Makefile', 'w') as f:
     f.write("%s\n" % '\n'.join(allSections))
 
-  if target: subprocess.call(['make', target.replace(':', '%')])
+  buildLine = "build:\n\t../../scripts/build.sh"
+  runLine = "run:\n\t../../scripts/run.sh"
+  sections = [shellLine, "\n.PHONY: build run\n", buildLine, runLine]
+  for path in containerPaths:
+    with open('%s/Makefile' % path, 'w') as f:
+      f.write("%s\n" % '\n'.join(sections))
+
+  if target:
+    splitted = target.split(":")
+    if len(splitted) > 2: raise RuntimeError("only one level of nesting is currently supported for target tasks.")
+    (task, args) = (splitted[1], {'cwd': "./containers/datt-%s" % splitted[0]}) if len(splitted) is 2 else (splitted[0], {})
+    subprocess.call(['make', task], **args)
