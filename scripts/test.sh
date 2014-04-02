@@ -5,4 +5,4 @@ DIR=`pwd`
 
 pushd $SCRIPT_DIR > /dev/null
 bundle exec rspec --default-path $DIR
-popd
+popd > /dev/null
