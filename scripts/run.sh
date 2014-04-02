@@ -10,4 +10,5 @@ CURRENT_DIR="${DIR##*/}"
 INDEX_NAME=$(echo $CURRENT_DIR | cut -d- -f 1)
 DOCKERINDEX=${DOCKERINDEX_LOCAL:-"$INDEX_NAME/"}
 
-docker run -i -t --rm -w "/files" --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"
+DENV=`test $# -gt 0 && echo "--env=$*" || echo ''`
+docker run -i -t --rm -w "/files" $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"

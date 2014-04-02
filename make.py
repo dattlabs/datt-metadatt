@@ -98,7 +98,8 @@ if __name__ == "__main__":
   buildLine = "build:\n\t../../scripts/build.sh"
   testLine = "test:\n\t../../scripts/test.sh"
   runLine = "run:\n\t../../scripts/run.sh"
-  sections = [shellLine, "\n.PHONY: build run test\n", buildLine, testLine, runLine]
+  debugLine = "debug:\n\t../../scripts/run.sh RUN_DEBUG=1"
+  sections = [shellLine, "\n.PHONY: build run test\n", buildLine, testLine, runLine, debugLine]
   for path in containerPaths:
     print('Writing %s/Makefile' % os.path.relpath(path))
     with open('%s/Makefile' % path, 'w') as f:
