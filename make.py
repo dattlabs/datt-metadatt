@@ -96,9 +96,11 @@ if __name__ == "__main__":
     f.write("%s\n" % '\n'.join(allSections))
 
   buildLine = "build:\n\t../../scripts/build.sh"
+  testLine = "test:\n\t../../scripts/test.sh"
   runLine = "run:\n\t../../scripts/run.sh"
-  sections = [shellLine, "\n.PHONY: build run\n", buildLine, runLine]
+  sections = [shellLine, "\n.PHONY: build run test\n", buildLine, testLine, runLine]
   for path in containerPaths:
+    print('Writing %s/Makefile' % os.path.relpath(path))
     with open('%s/Makefile' % path, 'w') as f:
       f.write("%s\n" % '\n'.join(sections))
 
