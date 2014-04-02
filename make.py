@@ -64,14 +64,14 @@ if __name__ == "__main__":
   containerPaths = getContainerPaths()
 
   if len(containerPaths) == 0:
-    print('Found no containers in ./containers. Calling ./init_submodules.sh.')
-    subprocess.call(['./init_submodules.sh'], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
+    print('Found no containers in ./containers. Calling ./init.sh.')
+    subprocess.call(['./init.sh'], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
     containerPaths = getContainerPaths()
 
   for path in containerPaths:
     if not os.path.exists("%s/.git" % path) or not isContainerPath(path):
       print 'Initializing sub-module: %s' % os.path.relpath(path)
-      subprocess.call(['./init_submodules.sh', path], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
+      subprocess.call(['./init.sh', path], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
     if not options.skip_pull:
       print 'Pulling from git repository: %s' % os.path.relpath(path)
       subprocess.call(['git', 'pull'], cwd=path, stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
