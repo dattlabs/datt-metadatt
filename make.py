@@ -72,9 +72,9 @@ if __name__ == "__main__":
     if not os.path.exists("%s/.git" % path) or not isContainerPath(path):
       print 'Initializing sub-module: %s' % os.path.relpath(path)
       subprocess.call(['./init.sh', path], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
-    if not options.skip_pull:
-      print 'Pulling from git repository: %s' % os.path.relpath(path)
-      subprocess.call(['git', 'pull'], cwd=path, stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
+
+  if not options.skip_pull:
+    subprocess.call(['./pull.sh'])
 
   dependencies = map(lambda p: ("./containers%s" % trimstart(p, containersRoot), getParentImageName(p)), containerPaths)
 
