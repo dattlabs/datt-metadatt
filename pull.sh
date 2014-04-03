@@ -1,12 +1,11 @@
 #!/bin/bash
 
+source ./scripts/helpers.bash
+
 pull() {
   echo Pulling from git repository: $2
-  pushd $2 &>/dev/null
-  git pull &>/dev/null
-  popd &>/dev/null
+  run_in_dir $2 "git pull &>/dev/null"
 }
 
 export -f pull
-
-find ./containers -name datt-* -type d | xargs -P 100 -n 1 bash -c 'pull "$@"' _ {}
+map_over_container_dirs pull
