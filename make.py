@@ -2,6 +2,7 @@
 
 from sys import argv, exit
 from optparse import OptionParser
+from shutil import copyfile
 import itertools
 import subprocess
 import glob
@@ -85,7 +86,7 @@ if __name__ == "__main__":
 
   shellLine = 'SHELL := /bin/bash'
   phonyLine = "\n.PHONY: all test %s\n" % allTargets
-  allLine = "all: test %s\n" % allTargets
+  allLine   = "all: test %s\n" % allTargets
   testLines = "test:\n\tbats ./tests/*\n"
   targetEntries = map(snd, targets)
 
@@ -96,14 +97,18 @@ if __name__ == "__main__":
     f.write("%s\n" % '\n'.join(allSections))
 
   buildLine = "build:\n\t../../scripts/build.sh"
-  testLine = "test:\n\t../../scripts/test.sh"
-  runLine = "run:\n\t../../scripts/run.sh"
+  testLine  = "test:\n\t../../scripts/test.sh"
+  runLine   = "run:\n\t../../scripts/run.sh"
   debugLine = "debug:\n\t../../scripts/run.sh RUN_DEBUG=1"
   sections = [shellLine, "\n.PHONY: build run test\n", buildLine, testLine, runLine, debugLine]
   for path in containerPaths:
     print('Writing %s/Makefile' % os.path.relpath(path))
     with open('%s/Makefile' % path, 'w') as f:
       f.write("%s\n" % '\n'.join(sections))
+    filesPath = '%s/files' % path
+    print('Copying test_server.js to %s' % os.path.relpath(filesPath))
+    if not os.path.exists(filesPath): os.makedirs(filesPath)
+    copyfile('./test_server/test_server.js', '%s/test_server.js' % filesPath)
 
   if target:
     splitted = target.split(":")
