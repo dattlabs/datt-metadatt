@@ -11,6 +11,7 @@ INDEX_NAME=$(echo $CURRENT_DIR | cut -d- -f 1)
 DOCKERINDEX=${DOCKERINDEX_LOCAL:-"$INDEX_NAME/"}
 
 DENV=`test $# -gt 0 && echo "--env=$*" || echo ''`
-docker run --cidfile=$DIR/host.id --expose=13337 -P -i -t --rm -w "/files" $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"
 
-rm $DIR/host.id
+trap 'rm $DIR/host.id' EXIT INT TERM HUP
+
+docker run --cidfile=$DIR/host.id --expose=13337 -P -i -t --rm -w "/files" $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"
