@@ -16,18 +16,18 @@ var server = net.createServer(function (socket) {
       return;
     }
     console.log('Running test: ' + test);
-    var stdout, stderr, error;
+    var stdout, stderr, error = "";
     var child = execFile('./' + test, {cwd: testDir }, function (err, so, se) {
       stdout = so.trim();
       stderr = se.trim();
-      error = err.toString().trim();
       console.log('[STDOUT]:    ' + stdout);
       console.log('[STDERR]:    ' + stderr);
-      if (error != null) {
+      if (err != null) {
+        error = err.toString().trim();
         console.log('[ERROR]:     ' + error);
       }
     });
-    child.on('close', function (code) {
+    child.on('exit', function (code) {
       console.log('[EXIT CODE]: ' + code);
       socket.write(JSON.stringify({stdout: stdout, stderr: stderr, error: error, code: code}) + '\n');
     });
@@ -35,3 +35,14 @@ var server = net.createServer(function (socket) {
 });
 
 server.listen(13337, '0.0.0.0');
+
+var http = require('http');
+var options = {
+  hostname: process.env.CONTAINER_HOST_IP,
+  port: 41234,
+  path: '/',
+  method: 'GET'
+};
+
+var req = http.request(options, function(res) {});
+req.end();
