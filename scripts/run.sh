@@ -14,4 +14,4 @@ DENV=`test $# -gt 0 && echo "--env=$*" || echo ''`
 
 trap 'rm $DIR/host.id' EXIT INT TERM HUP
 
-docker run --cidfile=$DIR/host.id --expose=13337 -P -i -t --rm -w "/files" $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"
+docker run --cidfile=$DIR/host.id --publish=13337:13337 -i -t --rm -w "/files" $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR bash -c "supervisord; /bin/bash"
