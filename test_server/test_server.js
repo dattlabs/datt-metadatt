@@ -35,14 +35,3 @@ var server = net.createServer(function (socket) {
 });
 
 server.listen(13337, '0.0.0.0');
-
-var http = require('http');
-var options = {
-  hostname: process.env.CONTAINER_HOST_IP,
-  port: 41234,
-  path: '/',
-  method: 'GET'
-};
-
-var req = http.request(options, function(res) {});
-req.end();
