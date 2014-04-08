@@ -19,7 +19,7 @@ tests.each { |testPath|
       test = Pathname.new(testPath).basename.to_s
       output = `./telnet.sh #{testServerHostname} #{testServerPort} #{test}`.to_s.strip!
       res = JSON.parse output
-      res['code'].should equal(0)
+      res['code'].should eq(0)
     end
   end
 }
