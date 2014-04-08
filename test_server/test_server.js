@@ -1,4 +1,3 @@
-
 var net = require('net');
 var execFile = require('child_process').execFile;
 var fs = require('fs');
@@ -17,7 +16,7 @@ var server = net.createServer(function (socket) {
     }
     console.log('Running test: ' + test);
     var stdout, stderr, error = "";
-    var child = execFile('./' + test, {cwd: testDir }, function (err, so, se) {
+    var child = execFile('./' + test, {cwd: testDir}, function (err, so, se) {
       stdout = so.trim();
       stderr = se.trim();
       console.log('[STDOUT]:    ' + stdout);
