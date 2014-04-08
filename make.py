@@ -109,6 +109,7 @@ if __name__ == "__main__":
     print('Copying test_server.js to %s' % os.path.relpath(filesPath))
     if not os.path.exists(filesPath): os.makedirs(filesPath)
     copyfile('./test_server/test_server.js', '%s/test_server.js' % filesPath)
+    copyfile('./scripts/helpers.bash', '%s/scripts/helpers.bash' % filesPath)
 
   if target:
     splitted = target.split(":")
