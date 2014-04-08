@@ -106,9 +106,12 @@ if __name__ == "__main__":
     with open('%s/Makefile' % path, 'w') as f:
       f.write("%s\n" % '\n'.join(sections))
     filesPath = '%s/files' % path
+
     print('Copying test_server.js to %s' % os.path.relpath(filesPath))
-    if not os.path.exists(filesPath): os.makedirs(filesPath)
+    subprocess.call(['mkdir', '-p', '%s/scripts' % filesPath], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
     copyfile('./test_server/test_server.js', '%s/test_server.js' % filesPath)
+
+    print('Copying scripts/helpers.bash to %s' % os.path.relpath(filesPath))
     copyfile('./scripts/helpers.bash', '%s/scripts/helpers.bash' % filesPath)
 
   if target:
