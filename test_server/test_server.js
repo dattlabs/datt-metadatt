@@ -11,7 +11,7 @@ var server = net.createServer(function (socket) {
     var test = data.toString().trim();
     if (scripts.indexOf(test) == -1) {
       console.log("Attempt to run invalid test: " + test);
-      socket.write("Nice try! Invalid test.\n");
+      socket.write("FAIL.\n");
       return;
     }
     console.log('Running test: ' + test);
