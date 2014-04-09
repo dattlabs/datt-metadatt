@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from sys import argv, exit
+from string import Template
 from optparse import OptionParser
 from shutil import copyfile
 import itertools
@@ -47,6 +48,26 @@ def getContainerMakefileEntry(containerPath, parentImageName):
   target = containerPathToTarget(containerPath)
   labelLine = "%s:%s" % (target, " %s" % parent if isDattImage(parentImageName) else "")
   return getDefaultMakefileEntry(target, labelLine, containerPath)
+
+def partition(lst, condition):
+  l1,l2 = itertools.tee((condition(item), item) for item in lst)
+  return (i for p, i in l1 if p), (i for p, i in l2 if not p)
+
+def copyTemplates(templateDir, destDir, mapping):
+  from os.path import isfile
+  files, dirs = partition(os.listdir(templateDir), lambda x: isfile('%s/%s' % (templateDir, x)))
+  for fi in files:
+    srcFile = '%s/%s' % (templateDir, fi)
+    dstFile = '%s/%s' % (destDir, fi)
+    print 'Transforming %s into %s' % (os.path.relpath(srcFile), os.path.relpath(dstFile))
+    with open(srcFile, 'r') as f:
+      replaced = Template(f.read()).substitute(mapping)
+      with open(dstFile, 'w') as of:
+        of.write(replaced)
+  for d in dirs:
+    dest = '%s/%s' % (destDir, d)
+    subprocess.call(['mkdir', '-p', dest], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
+    copyTemplates('%s/%s' % (templateDir, d), dest, mapping)
 
 if __name__ == "__main__":
   parser = OptionParser(usage="usage: %prog [options] [build_target]")
@@ -112,6 +133,8 @@ if __name__ == "__main__":
 
     print('Copying scripts/helpers.bash to %s' % os.path.relpath(filesPath))
     copyfile('./scripts/helpers.bash', '%s/scripts/helpers.bash' % filesPath)
+
+    copyTemplates(os.path.abspath("./templates"), path, {'container': os.path.basename(path)})
 
   if target:
     splitted = target.split(":")
