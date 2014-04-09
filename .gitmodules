@@ -69,3 +69,7 @@
 [submodule "containers/datt-haskell"]
 	path = containers/datt-haskell
 	url = git@github.com:dattlabs/datt-haskell.git
+
+[submodule "containers/datt-ruby"]
+	path = containers/datt-ruby
+	url = git@github.com:dattlabs/datt-ruby.git
