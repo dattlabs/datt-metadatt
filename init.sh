@@ -1,4 +1,7 @@
 #!/bin/bash
+
+set -e
+
 git pull > /dev/null && \
   git submodule init > /dev/null && \
   git submodule update > /dev/null && \
