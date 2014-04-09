@@ -85,12 +85,11 @@ if __name__ == "__main__":
   allTargets = ' '.join(map(fst, targets))
 
   shellLine = 'SHELL := /bin/bash'
-  phonyLine = "\n.PHONY: all test %s\n" % allTargets
-  allLine   = "all: test %s\n" % allTargets
-  testLines = "test:\n\tbats ./tests/*\n"
+  phonyLine = "\n.PHONY: all %s\n" % allTargets
+  allLine   = "all: %s\n" % allTargets
   targetEntries = map(snd, targets)
 
-  allSections = [shellLine, phonyLine, allLine, testLines] + targetEntries
+  allSections = [shellLine, phonyLine, allLine] + targetEntries
 
   print('Writing ./Makefile')
   with open('Makefile', 'w') as f:
