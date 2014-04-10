@@ -125,8 +125,8 @@ if __name__ == "__main__":
     print('Writing %s/Makefile' % os.path.relpath(path))
     with open('%s/Makefile' % path, 'w') as f:
       f.write("%s\n" % '\n'.join(sections))
-    filesPath = '%s/files' % path
 
+    filesPath = '%s/files' % path
     print('Copying test_server.js to %s' % os.path.relpath(filesPath))
     subprocess.call(['mkdir', '-p', '%s/scripts' % filesPath], stderr=open(os.devnull, 'w'), stdout=open(os.devnull, 'w'))
     copyfile('./test_server/test_server.js', '%s/test_server.js' % filesPath)
