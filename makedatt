@@ -50,7 +50,7 @@ def getContainerMakefileEntry(containerPath, parentImageName):
   return getDefaultMakefileEntry(target, labelLine, containerPath)
 
 def partition(lst, condition):
-  l1,l2 = itertools.tee((condition(item), item) for item in lst)
+  l1, l2 = itertools.tee((condition(item), item) for item in lst)
   return (i for p, i in l1 if p), (i for p, i in l2 if not p)
 
 def copyTemplates(templateDir, destDir, mapping):
