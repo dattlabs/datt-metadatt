@@ -22,5 +22,5 @@ TTY=`test "$INPUT_FILE" = "/dev/stdin" && echo "-t" || echo ''`
 # PASS RUN_CMD into the script to override the default CMD found in the Dockerfile.
 # RUN_CMD="/files/start.sh"
 
-docker run --expose=13337 $TTY -a stdout -a stdin --cidfile=$DIR/host.id $VOLUMES -P -i --rm -w "/files" \
+docker run $TTY -a stdout -a stdin --cidfile=$DIR/host.id $VOLUMES -P -i --rm -w "/files" \
   $DENV --hostname $CURRENT_DIR $DOCKERINDEX$CURRENT_DIR ${RUN_CMD:""} < "$INPUT_FILE" > "$OUTPUT_FILE"
