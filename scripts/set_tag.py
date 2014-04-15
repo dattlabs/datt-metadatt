@@ -11,7 +11,7 @@ def set_tag(container, key, value):
 def check_container_count(container):
   output = os.popen('docker ps | grep %s' % container).read().strip()
   count = len(output.splitlines()) 
-  if count != 1: raise RuntimeError('Error must be exactly one container of this type running but found %s' % count)
+  if count != 1: raise RuntimeError('Must be exactly one container of this type running but found %s' % count)
 
 if __name__ == "__main__":
   parser = OptionParser(usage="usage: %prog container tag_key tag_value")
