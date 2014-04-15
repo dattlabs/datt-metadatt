@@ -6,9 +6,9 @@
 set -e
 
 DIR=`pwd`
-CURRENT_DIR="${DIR##*/}"
+CONTAINER="${DIR##*/}"
 
-INDEX_NAME=$(echo $CURRENT_DIR | cut -d- -f 1)
+INDEX_NAME=$(echo $CONTAINER | cut -d- -f 1)
 DOCKERINDEX=${DOCKERINDEX_LOCAL:-"$INDEX_NAME/"}
 
-docker build --rm -t=$DOCKERINDEX$CURRENT_DIR:latest $DIR/.
+docker build --rm -t=$DOCKERINDEX$CONTAINER:latest $DIR/.
