@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -B
 
 from optparse import OptionParser
 from set_ports import rpc_port

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python -B
 
 from optparse import OptionParser
 import inspect
