@@ -69,4 +69,6 @@
 [submodule "containers/datt-haskell"]
 	path = containers/datt-haskell
 	url = git@github.com:dattlabs/datt-haskell.git
-
+[submodule "containers/datt-emailservice"]
+	path = containers/datt-emailservice
+	url = git@github.com:loyal3/email-service.git
