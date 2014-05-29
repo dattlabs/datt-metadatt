@@ -8,6 +8,7 @@ import itertools
 import subprocess
 import glob
 import os
+import re
 
 isContainerPath = lambda p: os.path.isfile("%s/Dockerfile" % p)
 
@@ -84,6 +85,13 @@ if __name__ == "__main__":
 
   getContainerPaths = lambda: glob.glob("%s/datt-*" % containersRoot)
   containerPaths = getContainerPaths()
+
+  if os.environ.get('DATTDEV') != None:
+    with open("%s/.gitmodules" % metaDattRoot, "r+") as f:
+      lines = f.readlines()
+      f.seek(0)
+      f.writelines(map(lambda l: re.sub('https://(.*?)/', 'git@\\1:', l), lines))
+      f.truncate()
 
   if len(containerPaths) == 0:
     print('Found no containers in ./containers. Calling ./init.sh.')
