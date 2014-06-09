@@ -72,5 +72,6 @@
 
 [submodule "containers/datt-emailservice"]
 	path = containers/datt-emailservice
-	url = https://github.com/loyal3/email-service.git
+	url = git@github.com:loyal3/email-service.git
+
 
